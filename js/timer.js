@@ -7,41 +7,49 @@ var periods = [
 	{name:'6th Period', time:{from:{h:12,m:30},to:{h:13,m:15}}},
 	{name:'7th Period', time:{from:{h:13,m:40},to:{h:14,m:25}}},
 	{name:'8th Period', time:{from:{h:14,m:30},to:{h:15,m:15}}},
-	{name:'9th Period', time:{from:{h:15,m:20},to:{h:16,m:05}}}
+	{name:'9th Period', time:{from:{h:15,m:20},to:{h:16,m:05}}},
+	{name:'The Dark Period', time:{from:{h:00,m:20},to:{h:00,m:24}}}
 ];
 
 var timer = {
 	e: null,
 	h: null,
 	m: null,
-	s: null
+	s: null,
+	i: null
 };
 
 function update() {
-	console.log('update()');
+	var date = new Date();
 	var now = {
-		h: new Date(Date.now()).getHours(),
-		m: new Date(Date.now()).getMinutes(),
-		s: new Date(Date.now()).getSeconds()
+		h: date.getHours(),
+		m: date.getMinutes(),
+		s: date.getSeconds(),
+		ms: date.getMilliseconds()
 	};
-	console.log('now: '+now);
 	for (var p = 0; p < periods.length; p++) {
-		if (now.h >= periods[p].time.from.h && now.m >= periods[p].time.from.m &&
-			now.h < periods[p].time.to.h && now.m < periods[p].time.to.m) {
-			console.log('in period');
+		if (((now.h == periods[p].time.from.h && now.m >= periods[p].time.from.m) && (now.h == periods[p].time.to.h && now.m < periods[p].time.to.m)) ||
+			((now.h == periods[p].time.from.h && now.m >= periods[p].time.from.m) && now.h < periods[p].time.to.h) ||
+			(now.h > periods[p].time.from.h && (now.h == periods[p].time.to.h && now.m < periods[p].time.to.m)) ||
+			(now.h > periods[p].time.from.h && now.h < periods[p].time.to.h)) {
+			//providing a leading zero for consistent string width
+			timer.h.innerHTML = ('0'+(periods[p].time.to.h - now.h)).slice(-2);
+			timer.m.innerHTML = ('0'+(periods[p].time.to.m - now.m -1)).slice(-2);
+			timer.s.innerHTML = ('0'+(59 - now.s)).slice(-2);
+			timer.i.innerHTML = periods[p].name;
 			break;
 		} else if (p == periods.length-1) {
-			console.log('no period');
-			p = null;
+			//p = null;
+			//providing a leading zero for consistent string width
+			timer.h.innerHTML = ('0'+now.h).slice(-2);
+			timer.m.innerHTML = ('0'+now.m).slice(-2);
+			timer.s.innerHTML = ('0'+now.s).slice(-2);
+			timer.i.innerHTML = '';
 			break;
-		} else {
-			console.log('other period');
 		}
 	}
-	timer.h.innerHTML = ('0'+now.h).slice(-2);
-	timer.m.innerHTML = ('0'+now.m).slice(-2);
-	timer.s.innerHTML = ('0'+now.s).slice(-2);
-	setTimeout(function(){window.requestAnimationFrame(update);}, 200);
+	setTimeout(function(){window.requestAnimationFrame(update);}, 990-(new Date().getMilliseconds()));
+	return p;
 }
 
 window.onload = function(){
@@ -49,13 +57,16 @@ window.onload = function(){
 	timer.h = document.getElementById('hours');
 	timer.m = document.getElementById('minutes');
 	timer.s = document.getElementById('seconds');
+	timer.i = document.getElementById('info');
 
 	update();
 	adaptfont(timer.e);
+	timer.i.style.fontSize = parseInt(timer.e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) /5 + timer.e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2];
 };
 
 window.onresize = function(){
 	adaptfont(timer.e);
+	timer.i.style.fontSize = parseInt(timer.e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) /5 + timer.e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2];
 }
 
 function adaptfont(e) {
@@ -67,13 +78,13 @@ function adaptfont(e) {
 	}
 	while (e.offsetWidth >= e.scrollWidth) {
 		//increase size
-		e.style.fontSize = parseInt(e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) * 1.1 +1 + e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2]
+		e.style.fontSize = parseInt(e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) * 1.1 +1 + e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2];
 	}
 	while (e.offsetWidth < e.scrollWidth) {
 		//decrease size
-		e.style.fontSize = parseInt(e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) * 0.9 -1 + e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2]
+		e.style.fontSize = parseInt(e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) * 0.9 -1 + e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2];
 	}
-	return true;
+	return e.style.fontSize;
 }
 
 /*
