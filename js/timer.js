@@ -26,6 +26,12 @@ window.onload = function(){
 	adaptfont(timer.e);
 };
 
+window.onresize = function(){
+	adaptfont(timer.e);
+}
+
+
+
 function adaptfont(e) {
 	if (typeof e === 'undefined') {
 		return false
