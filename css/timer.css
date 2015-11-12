@@ -7,14 +7,24 @@ body.theme_dark {
 	background-color: #000;
 }
 
-p#timer/*, #timer span*/ {
-	font-family: monospace;
+p#timer {
+	font-family: monospace; /* use a monospace font for consistent width! */
 	font-weight: bold;
 	font-size: 50px;
 	text-align: center;
 	white-space: nowrap;
 }
+p#info {
+	font-family: "Ubuntu", -apple-system, "Oxygen", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
+	text-align: center;
+	white-space: nowrap;
+	font-size: 20px;
+	color: #aaa;
+}
 
 .theme_dark p#timer, .theme_dark #timer span {
 	color: #fff;
+}
+.theme_dark p#info {
+	color: #666;
 }
