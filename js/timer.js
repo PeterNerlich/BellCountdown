@@ -19,7 +19,61 @@ var timer = {
 
 window.onload = function(){
 	timer.e = document.getElementById('timer');
-        timer.h = document.getElementById('hours');
-        timer.m = document.getElementById('minutes');
-        timer.s = document.getElementById('seconds');
+	timer.h = document.getElementById('hours');
+	timer.m = document.getElementById('minutes');
+	timer.s = document.getElementById('seconds');
+
+	adaptfont(timer.e);
 };
+
+function adaptfont(e) {
+	if (typeof e === 'undefined') {
+		return false
+	}
+	if (e.style.fontSize === '') {
+		e.style.fontSize = '1px';
+	}
+	while (e.offsetWidth >= e.scrollWidth) {
+		e.style.fontSize = parseInt(e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) * 1.1 +1 + e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2]
+	}
+	while (e.offsetWidth < e.scrollWidth) {
+		e.style.fontSize = parseInt(e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) * 0.9 -1 + e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2]
+	}
+	return true;
+}
+
+/*
+function adaptfont(e) {
+	if (typeof e === 'undefined') {
+		return false
+	}
+	if (e.style.fontSize === '') {
+		e.style.fontSize = '1px';
+	}
+	//console.log(e);
+	return abc1(e);
+}
+
+function abc1(e) {
+	if (e.offsetWidth >= e.scrollWidth && e.offsetHeight >= e.scrollHeight) {
+		//console.log('abc1: ' + e.style.fontSize);
+		e.style.fontSize = parseInt(e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) * 1.1 +1 + e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2]
+		//return window.requestAnimationFrame(function(){abc1(e);});
+		return abc1(e);
+	} else {
+		//return window.requestAnimationFrame(function(){abc2(e);});
+		return abc2(e);
+	}
+}
+function abc2(e) {
+	if (e.offsetWidth < e.scrollWidth || e.offsetHeight < e.scrollHeight) {
+		//console.log('abc2: ' + e.style.fontSize);
+		e.style.fontSize = parseInt(e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) * 0.9 -1 + e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2]
+		//return window.requestAnimationFrame(function(){abc2(e);});
+		return abc2(e);
+	} else {
+		//console.log('done');
+		return true;
+	}
+}
+*/
