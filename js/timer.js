@@ -11,11 +11,12 @@ var periods = [
 ];
 
 var timer = {
+	i: null,
 	e: null,
 	h: null,
 	m: null,
 	s: null,
-	i: null
+	p: null
 };
 
 function update() {
@@ -29,7 +30,7 @@ function update() {
 			timer.h.innerHTML = ('0'+now.getUTCHours()).slice(-2);
 			timer.m.innerHTML = ('0'+now.getUTCMinutes()).slice(-2);
 			timer.s.innerHTML = ('0'+now.getUTCSeconds()).slice(-2);
-			timer.i.innerHTML = periods[p].name+', ends '+('0'+periods[p].time.to.t.getHours()).slice(-2)+':'+('0'+periods[p].time.to.t.getMinutes()).slice(-2);
+			timer.p.innerHTML = periods[p].name+', ends '+('0'+periods[p].time.to.t.getHours()).slice(-2)+':'+('0'+periods[p].time.to.t.getMinutes()).slice(-2);
 			timer.e.classList.remove('clock');
 			if (now <= new Date(0).setMinutes(10)) {
 				timer.e.classList.add('ending');
@@ -47,7 +48,7 @@ function update() {
 			timer.h.innerHTML = ('0'+date.getHours()).slice(-2);
 			timer.m.innerHTML = ('0'+date.getMinutes()).slice(-2);
 			timer.s.innerHTML = ('0'+date.getSeconds()).slice(-2);
-			timer.i.innerHTML = '';
+			timer.p.innerHTML = '';
 			timer.e.classList.add('clock');
 			timer.e.classList.remove('ending');
 			timer.e.classList.remove('theend');
@@ -59,22 +60,23 @@ function update() {
 }
 
 window.onload = function(){
-	timer.e = document.getElementById('timer');
-	timer.h = document.getElementById('hours');
-	timer.m = document.getElementById('minutes');
-	timer.s = document.getElementById('seconds');
-	timer.i = document.getElementById('info');
+	timer.i = document.querySelector('#info');
+	timer.e = document.querySelector('#timer');
+	timer.h = document.querySelector('#hours');
+	timer.m = document.querySelector('#minutes');
+	timer.s = document.querySelector('#seconds');
+	timer.p = document.querySelector('#period');
 
 	parsePeriods();
 
 	update();
 	adaptfont(timer.e);
-	timer.i.style.fontSize = parseInt(timer.e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) /5 + timer.e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2];
+	//timer.p.style.fontSize = parseInt(timer.e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) /5 + timer.e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2];
 };
 
 window.onresize = function(){
 	adaptfont(timer.e);
-	timer.i.style.fontSize = parseInt(timer.e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) /5 + timer.e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2];
+	//timer.p.style.fontSize = parseInt(timer.e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) /5 + timer.e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2];
 }
 
 function parsePeriods() {
@@ -96,13 +98,17 @@ function adaptfont(e) {
 	if (e.style.fontSize === '') {
 		e.style.fontSize = '1px';
 	}
-	while (e.offsetWidth >= e.scrollWidth) {
+	while (e.offsetWidth >= e.scrollWidth && document.body.clientHeight > document.querySelector('section').scrollHeight) {
 		//increase size
 		e.style.fontSize = parseInt(e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) * 1.1 +1 + e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2];
+		timer.i.style.fontSize = parseInt(e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) /6 + e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2];
+		timer.p.style.fontSize = parseInt(e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) /5 + e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2];
 	}
-	while (e.offsetWidth < e.scrollWidth) {
+	while (e.offsetWidth < e.scrollWidth || document.body.clientHeight < document.querySelector('section').scrollHeight) {
 		//decrease size
 		e.style.fontSize = parseInt(e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) * 0.9 -1 + e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2];
+		timer.i.style.fontSize = parseInt(e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) /6 + e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2];
+		timer.p.style.fontSize = parseInt(e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) /5 + e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2];
 	}
 	return e.style.fontSize;
 }
