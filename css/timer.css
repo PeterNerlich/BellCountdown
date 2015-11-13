@@ -13,18 +13,56 @@ p#timer {
 	font-size: 50px;
 	text-align: center;
 	white-space: nowrap;
+	color: #000;
+	transition: color 1s;
 }
+#timer spam {
+	transition: color 1s;
+}
+p#timer.clock {
+	color: #bbb;
+}
+p#timer.ending {
+	color: #400;
+}
+#timer.theend #seconds {
+	color: #f00;
+	animation-name: secpulsate;
+	animation-duration: 2s;
+	animation-iteration-count: infinite;
+}
+
 p#info {
 	font-family: "Ubuntu", -apple-system, "Oxygen", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
 	text-align: center;
 	white-space: nowrap;
 	font-size: 20px;
 	color: #aaa;
+	transition: color 1s;
 }
 
-.theme_dark p#timer, .theme_dark #timer span {
+.theme_dark p#timer {
 	color: #fff;
+}
+.theme_dark p#timer.clock {
+	color: #444;
+}
+p#timer.ending {
+	color: #fbb;
+}
+.theme_dark #timer.theend #seconds {
+	color: #f00;
+	animation-name: secpulsate;
+	animation-duration: 2s;
+	animation-iteration-count: infinite;
 }
 .theme_dark p#info {
 	color: #666;
+}
+
+
+@keyframes secpulsate {
+	0% {color: #fff;}
+	50% {color: #f00;}
+	100% {color: #fff;}
 }

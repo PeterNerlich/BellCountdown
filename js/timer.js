@@ -1,14 +1,13 @@
 // begin and end time in minutes since 00:00:00 of today (local time)
 var periods = [
-	{name:'1st Period', time:{from:{h:7,m:45},to:{h:8,m:30}}},
-	{name:'2nd Period', time:{from:{h:8,m:40},to:{h:9,m:25}}},
-	{name:'3rd & 4th Period', time:{from:{h:9,m:45},to:{h:11,m:15}}},
-	{name:'5th Period', time:{from:{h:11,m:35},to:{h:12,m:20}}},
-	{name:'6th Period', time:{from:{h:12,m:30},to:{h:13,m:15}}},
-	{name:'7th Period', time:{from:{h:13,m:40},to:{h:14,m:25}}},
-	{name:'8th Period', time:{from:{h:14,m:30},to:{h:15,m:15}}},
-	{name:'9th Period', time:{from:{h:15,m:20},to:{h:16,m:05}}},
-	{name:'The Dark Period', time:{from:{h:00,m:20},to:{h:00,m:24}}}
+	{name:'1st Period', time:{from:{h:7,m:45,t:null},to:{h:8,m:30,t:null}}},
+	{name:'2nd Period', time:{from:{h:8,m:40,t:null},to:{h:9,m:25,t:null}}},
+	{name:'3rd & 4th Period', time:{from:{h:9,m:45,t:null},to:{h:11,m:15,t:null}}},
+	{name:'5th Period', time:{from:{h:11,m:35,t:null},to:{h:12,m:20,t:null}}},
+	{name:'6th Period', time:{from:{h:12,m:30,t:null},to:{h:13,m:15,t:null}}},
+	{name:'7th Period', time:{from:{h:13,m:40,t:null},to:{h:14,m:25,t:null}}},
+	{name:'8th Period', time:{from:{h:14,m:30,t:null},to:{h:15,m:15,t:null}}},
+	{name:'9th Period', time:{from:{h:15,m:20,t:null},to:{h:16,m:05,t:null}}}
 ];
 
 var timer = {
@@ -21,30 +20,37 @@ var timer = {
 
 function update() {
 	var date = new Date();
-	var now = {
-		h: date.getHours(),
-		m: date.getMinutes(),
-		s: date.getSeconds(),
-		ms: date.getMilliseconds()
-	};
+	var day1 = new Date(0).setDate(2);
 	for (var p = 0; p < periods.length; p++) {
-		if (((now.h == periods[p].time.from.h && now.m >= periods[p].time.from.m) && (now.h == periods[p].time.to.h && now.m < periods[p].time.to.m)) ||
-			((now.h == periods[p].time.from.h && now.m >= periods[p].time.from.m) && now.h < periods[p].time.to.h) ||
-			(now.h > periods[p].time.from.h && (now.h == periods[p].time.to.h && now.m < periods[p].time.to.m)) ||
-			(now.h > periods[p].time.from.h && now.h < periods[p].time.to.h)) {
+		if (date % day1 >= periods[p].time.from.t && date % day1 < periods[p].time.to.t) {
 			//providing a leading zero for consistent string width
-			timer.h.innerHTML = ('0'+(periods[p].time.to.h - now.h)).slice(-2);
-			timer.m.innerHTML = ('0'+(periods[p].time.to.m - now.m -1)).slice(-2);
-			timer.s.innerHTML = ('0'+(59 - now.s)).slice(-2);
-			timer.i.innerHTML = periods[p].name;
+			var now = new Date(periods[p].time.to.t - date % day1);
+			// Watch out for local timezones! Use UTC methods!
+			timer.h.innerHTML = ('0'+now.getUTCHours()).slice(-2);
+			timer.m.innerHTML = ('0'+now.getUTCMinutes()).slice(-2);
+			timer.s.innerHTML = ('0'+now.getUTCSeconds()).slice(-2);
+			timer.i.innerHTML = periods[p].name+', ends '+('0'+periods[p].time.to.t.getHours()).slice(-2)+':'+('0'+periods[p].time.to.t.getMinutes()).slice(-2);
+			timer.e.classList.remove('clock');
+			if (now <= new Date(0).setMinutes(10)) {
+				timer.e.classList.add('ending');
+				if (now <= new Date(0).setSeconds(10)) {
+					timer.e.classList.add('theend');
+				}
+			} else {
+				timer.e.classList.remove('ending');
+				timer.e.classList.remove('theend');
+			}
 			break;
 		} else if (p == periods.length-1) {
 			//p = null;
 			//providing a leading zero for consistent string width
-			timer.h.innerHTML = ('0'+now.h).slice(-2);
-			timer.m.innerHTML = ('0'+now.m).slice(-2);
-			timer.s.innerHTML = ('0'+now.s).slice(-2);
+			timer.h.innerHTML = ('0'+date.getHours()).slice(-2);
+			timer.m.innerHTML = ('0'+date.getMinutes()).slice(-2);
+			timer.s.innerHTML = ('0'+date.getSeconds()).slice(-2);
 			timer.i.innerHTML = '';
+			timer.e.classList.add('clock');
+			timer.e.classList.remove('ending');
+			timer.e.classList.remove('theend');
 			break;
 		}
 	}
@@ -59,6 +65,8 @@ window.onload = function(){
 	timer.s = document.getElementById('seconds');
 	timer.i = document.getElementById('info');
 
+	parsePeriods();
+
 	update();
 	adaptfont(timer.e);
 	timer.i.style.fontSize = parseInt(timer.e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) /5 + timer.e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2];
@@ -67,6 +75,18 @@ window.onload = function(){
 window.onresize = function(){
 	adaptfont(timer.e);
 	timer.i.style.fontSize = parseInt(timer.e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[1]) /5 + timer.e.style.fontSize.match(/^(\d+(?:\.\d+)?)(.*)$/)[2];
+}
+
+function parsePeriods() {
+	var zero = new Date(0);
+	for (var i = 0; i < periods.length; i++) {
+		periods[i].time.from.t = new Date((function(){zero.setHours(periods[i].time.from.h);zero.setMinutes(periods[i].time.from.m);return zero;})());
+		periods[i].time.to.t = new Date((function(){zero.setHours(periods[i].time.to.h);zero.setMinutes(periods[i].time.to.m);return zero;})());
+		if (periods[i].time.from.t > periods[i].time.to.t) {
+			periods[i].time.to.t.setDate(periods[i].time.to.t.getDate()+1);
+		}
+	}
+	return true;
 }
 
 function adaptfont(e) {
