@@ -48,7 +48,7 @@ p#info {
 	color: #444;
 }
 p#timer.ending {
-	color: #f88;
+	color: #fbb;
 }
 .theme_dark #timer.theend #seconds {
 	color: #f00;
