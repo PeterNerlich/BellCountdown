@@ -7,8 +7,7 @@ var periods = [
 	{name:'6th Period', time:{from:{h:12,m:30},to:{h:13,m:15}}},
 	{name:'7th Period', time:{from:{h:13,m:40},to:{h:14,m:25}}},
 	{name:'8th Period', time:{from:{h:14,m:30},to:{h:15,m:15}}},
-	{name:'9th Period', time:{from:{h:15,m:20},to:{h:16,m:05}}},
-	{name:'The Dark Period', time:{from:{h:00,m:20},to:{h:00,m:24}}}
+	{name:'9th Period', time:{from:{h:15,m:20},to:{h:16,m:05}}}
 ];
 
 var timer = {
@@ -37,6 +36,16 @@ function update() {
 			timer.m.innerHTML = ('0'+(periods[p].time.to.m - now.m -1)).slice(-2);
 			timer.s.innerHTML = ('0'+(59 - now.s)).slice(-2);
 			timer.i.innerHTML = periods[p].name;
+			timer.e.classList.remove('clock');
+			if (periods[p].time.to.h - now.h == 0 && periods[p].time.to.m - now.m <= 10) {
+				timer.e.classList.add('ending');
+				if (periods[p].time.to.m - now.m == 0 && 59 - now.s <= 10) {
+					timer.e.classList.add('theend');
+				}
+			} else {
+				timer.e.classList.remove('ending');
+				timer.e.classList.remove('theend');
+			}
 			break;
 		} else if (p == periods.length-1) {
 			//p = null;
@@ -45,6 +54,9 @@ function update() {
 			timer.m.innerHTML = ('0'+now.m).slice(-2);
 			timer.s.innerHTML = ('0'+now.s).slice(-2);
 			timer.i.innerHTML = '';
+			timer.e.classList.add('clock');
+			timer.e.classList.remove('ending');
+			timer.e.classList.remove('theend');
 			break;
 		}
 	}
