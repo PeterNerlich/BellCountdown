@@ -54,6 +54,14 @@ p#info {
 	color: #bbb;
 	transition: color 1s;
 }
+#info a {
+	text-decoration: none;
+	color: #aaa;
+	transition: color 200ms;
+}
+#info a:hover {
+	color: #966;
+}
 p#period {
 	font-family: "Ubuntu", -apple-system, "Oxygen", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
 	text-align: center;
@@ -80,6 +88,12 @@ p#timer.ending {
 }
 .theme_dark p#info {
 	color: #555;
+}
+.theme_dark #info a {
+	color: #777;
+}
+.theme_dark #info a:hover {
+	color: #b99;
 }
 .theme_dark p#period {
 	color: #888;
