@@ -1,6 +1,10 @@
 * {
 	margin: 0;
 	padding: 0;
+	-ms-user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
 }
 
 html, body {
@@ -17,6 +21,7 @@ section {
 	position: relative;
 	top: 50%;
 	-webkit-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
 	-ms-transform: translateY(-50%);
 	transform: translateY(-50%);
 }
@@ -41,9 +46,10 @@ p#timer.ending {
 }
 #timer.theend #seconds {
 	color: #f00;
-	animation-name: secpulsate;
-	animation-duration: 2s;
-	animation-iteration-count: infinite;
+	-webkit-animation: secpulsate 2s infinite;
+	-moz-animation: secpulsate 2s infinite;
+	-ms-animation: secpulsate 2s infinite;
+	animation: secpulsate 2s infinite;
 }
 
 p#info {
@@ -82,9 +88,10 @@ p#timer.ending {
 }
 .theme_dark #timer.theend #seconds {
 	color: #f00;
-	animation-name: secpulsate;
-	animation-duration: 2s;
-	animation-iteration-count: infinite;
+	-webkit-animation: secpulsate 2s infinite;
+	-moz-animation: secpulsate 2s infinite;
+	-ms-animation: secpulsate 2s infinite;
+	animation: secpulsate 2s infinite;
 }
 .theme_dark p#info {
 	color: #555;
@@ -100,6 +107,21 @@ p#timer.ending {
 }
 
 
+@-webkit-keyframes secpulsate {
+	0% {color: #fff;}
+	50% {color: #f00;}
+	100% {color: #fff;}
+}
+@-moz-keyframes secpulsate {
+	0% {color: #fff;}
+	50% {color: #f00;}
+	100% {color: #fff;}
+}
+@-ms-keyframes secpulsate {
+	0% {color: #fff;}
+	50% {color: #f00;}
+	100% {color: #fff;}
+}
 @keyframes secpulsate {
 	0% {color: #fff;}
 	50% {color: #f00;}
